@@ -5,8 +5,8 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   enrollment.associate = function(models) {
     // associations can be defined here
-    enrollment.belongsTo(models.users)
-    enrollment.belongsTo(models.courses)
+    enrollment.belongsTo(models.user)
+    enrollment.belongsTo(models.course)
   };
   return enrollment;
 };

@@ -1,14 +1,14 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-  const permissions = sequelize.define('permissions', {
+  const permission = sequelize.define('permission', {
     admin: DataTypes.BOOLEAN,
     teacher: DataTypes.BOOLEAN,
     student: DataTypes.BOOLEAN,
     view_only: DataTypes.BOOLEAN
   }, {});
-  permissions.associate = function(models) {
+  permission.associate = function(models) {
     // associations can be defined here
-    permissions.belongsTo(models.roles)
+    permission.belongsTo(models.role)
   };
-  return permissions;
+  return permission;
 };
