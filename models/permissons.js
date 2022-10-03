@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   permissions.associate = function(models) {
     // associations can be defined here
-    permission.belongsTo(models.roles)
+    permissions.belongsTo(models.roles)
   };
   return permissions;
 };

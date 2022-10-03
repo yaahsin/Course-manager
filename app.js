@@ -6,6 +6,7 @@ const express = require('express')
 const handlebars = require('express-handlebars')
 const flash = require('connect-flash')
 const methodOverride = require('method-override')
+const db = require('./models')
 
 const app = express()
 const port = process.env.PORT || 3000

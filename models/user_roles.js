@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   user_roles.associate = function(models) {
     // associations can be defined here
-    user_roles.belongsToMany(models.users)
+    user_roles.belongsTo(models.users)
     user_roles.belongsTo(models.roles)
     
   };
