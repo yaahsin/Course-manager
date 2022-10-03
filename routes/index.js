@@ -18,7 +18,8 @@ router.get('/', (req, res) => {
 
 
 // users
-// router.get('/users, userController.signUp)
+router.get('/test', userController.test)
+router.post('/signup', userController.signUp)
 
 // enrollment
 // router.get('/enrollments', enrollmentController.getEnrollments)

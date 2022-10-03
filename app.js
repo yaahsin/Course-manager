@@ -24,7 +24,7 @@ app.use(express.json())
 app.use(methodOverride('_method'))
 app.use(flash())
 
-app.use(routes)
+app.use('/api', routes)
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))
 

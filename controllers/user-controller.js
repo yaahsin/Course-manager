@@ -1,20 +1,27 @@
 const bcrypt = require('bcryptjs')
-const db = require('../models')
-const { users } = db
+const { user } = require('../models')
 const userController = {
-  signUpPage: (req, res) => {
-    res.render('signup')
+  test: (req, res, next) => {
+    return res.status(200).json({
+      status: 'success',
+      message: 'test success'
+    })
   },
   signUp: (req, res) => {
     bcrypt.hash(req.body.password, 10)
-      .then(hash => users.create({
-        name: req.body.name,
+      .then(hash => user.create({
+        username: req.body.username,
         email: req.body.email,
-        password: hash
+        password: hash,
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
       }))
-      .then(() => {
-        res.redirect('/signin')
-      })
+
+    return res.status(200).json({
+      status: 'success',
+      message: 'Sign up success.'
+    })
+
   }
 }
 module.exports = userController
