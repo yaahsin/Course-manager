@@ -4,8 +4,8 @@ module.exports = (sequelize, DataTypes) => {
     name: DataTypes.STRING,
     time: DataTypes.STRING,
     description: DataTypes.STRING
-  }, {});
-  course.associate = function(models) {
+  }, { underscored: true });
+  course.associate = function (models) {
     // associations can be defined here
     course.belongsTo(models.user)
     course.hasMany(models.enrollment)
