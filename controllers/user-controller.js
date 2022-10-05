@@ -2,6 +2,8 @@ const jwt = require('jsonwebtoken')
 const sequelize = require('sequelize') // 可以寫原生語法
 const bcrypt = require('bcryptjs')
 const { user } = require('../models')
+
+
 const userController = {
   signUp: (req, res) => {
     const { username, email, password, checkPassword } = req.body
@@ -56,17 +58,24 @@ const userController = {
         })
       })
   },
-  login: async (req, res, next) => {
+  login: (req, res, next) => {
     try {
+      //  在passport內的local驗證失敗的話
+      if (req.user.error) {
+        return res.status(404).json(req.user.error)
+      }
+
+      // if success: 簽發token
       const userData = req.user.toJSON()
       delete userData.password
-      const token = jwt.sign(userData, process.env.JWT_SECRET, { expiresIn: '30d' })
-      res.json({
+      const token = jwt.sign(userData, process.env.JWT_SECRET, {
+        expiresIn: '30d'
+      })
+      // return token and data
+      return res.status(200).json({
         status: 'success',
-        data: {
-          token,
-          user: userData
-        }
+        token,
+        user: userData
       })
     } catch (err) {
       next(err)

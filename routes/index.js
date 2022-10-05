@@ -6,10 +6,11 @@ const admin = require('./modules/admin')
 const userController = require('../controllers/user-controller')
 const courseController = require('../controllers/course-controller')
 const enrollmentController = require('../controllers/enrollment-controller')
+const { authenticated } = require('../middleware/auth')
 
-router.use('/admin', admin)
+router.use('/admin', authenticated, admin)
 
-router.get('/', (req, res) => {
+router.get('/', authenticated, (req, res) => {
   res.render('index')
 })
 
