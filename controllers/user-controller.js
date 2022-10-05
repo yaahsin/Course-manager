@@ -1,3 +1,5 @@
+const jwt = require('jsonwebtoken')
+const sequelize = require('sequelize') // 可以寫原生語法
 const bcrypt = require('bcryptjs')
 const { user } = require('../models')
 const userController = {
@@ -53,6 +55,22 @@ const userController = {
           message: 'Sign up success.'
         })
       })
+  },
+  login: async (req, res, next) => {
+    try {
+      const userData = req.user.toJSON()
+      delete userData.password
+      const token = jwt.sign(userData, process.env.JWT_SECRET, { expiresIn: '30d' })
+      res.json({
+        status: 'success',
+        data: {
+          token,
+          user: userData
+        }
+      })
+    } catch (err) {
+      next(err)
+    }
   }
 }
 module.exports = userController

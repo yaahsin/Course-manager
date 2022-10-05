@@ -7,7 +7,8 @@ const routes = require('./routes')
 const handlebars = require('express-handlebars')
 const flash = require('connect-flash')
 const methodOverride = require('method-override')
-const db = require('./models') //測試用
+
+const passport = require('./config/passport')
 
 const app = express()
 const port = process.env.PORT || 3000
@@ -15,11 +16,11 @@ const port = process.env.PORT || 3000
 
 app.engine('hbs', handlebars({ defaultLayout: 'main', extname: '.hbs' }))
 app.set('view engine', 'hbs')
-
 app.use(express.static('public'))
 
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
+app.use(passport.initialize())
 
 app.use(methodOverride('_method'))
 app.use(flash())
