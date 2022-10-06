@@ -8,15 +8,15 @@ const courseController = require('../controllers/course-controller')
 const enrollmentController = require('../controllers/enrollment-controller')
 const { authenticated } = require('../middleware/auth')
 
-router.use('/admin', authenticated, admin)
+router.use('/admin', admin)
 
-router.get('/', authenticated, (req, res) => {
+router.get('/', (req, res) => {
   res.render('index')
 })
 
 // courses
-router.get('/courses/:id', courseController.getCourse)
-router.get('/courses', courseController.getCourses)
+router.get('/courses/:id', authenticated, courseController.getCourse)
+router.get('/courses', authenticated, courseController.getCourses)
 
 // users
 router.post('/login', passport.authenticate('local', { session: false }), userController.login)

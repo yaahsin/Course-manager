@@ -11,18 +11,23 @@ const { user } = require('../models')
 passport.use(new LocalStrategy(
   {
     usernameField: 'email',
-    passwordField: 'password',
+    passwordField: 'password'
   },
-  // verify user
   (email, password, cb) => {
     user.findOne({ where: { email } })
+      // 如果驗證失敗:回傳 cb(req.user.error)
       .then(user => {
-        // 如果驗證失敗:回傳 cb(req.user.error)
-        if (!user) return cb(null, { error: { status: 'error', message: '帳號或密碼錯誤' } })
-        bcrypt.compare(password, user.password).then(res => {
-          if (!res) return cb(null, { error: { status: 'error', message: '帳號或密碼錯誤' } })
-        })
+        if (!user) { return cb(null, { error: { status: 'error', message: '帳號或密碼錯誤' } }) }
+        return bcrypt.compare(password, user.password)
+          .then(isMatch => {
+            if (!isMatch) {
+              return cb(null, { error: { status: 'error', message: '帳號或密碼錯誤' } })
+            }
+            // All good return user data
+            return cb(null, user)
+          })
       })
+      .catch(err => cb(err))
   }
 ))
 
@@ -33,12 +38,13 @@ const jwtOptions = {
 }
 
 // 解開token後, 從payload取得使用者資料, 並回傳
-passport.use( 
+passport.use(
   new JWTStrategy(jwtOptions, async (jwtPayload, cb) => {
     try {
-      const user = await user.findByPk(jwtPayload.id)
-      if (!user) return cb(null, false)
-      return cb(null, user)
+      // 變數名字不要取跟資料庫一樣
+      const TheUser = await user.findByPk(jwtPayload.id)
+      if (!TheUser) return cb(null, false)
+      return cb(null, TheUser)
     } catch (error) {
       cb(error, false)
     }
