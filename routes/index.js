@@ -15,8 +15,8 @@ router.get('/', authenticated, (req, res) => {
 })
 
 // courses
-// router.get('/courses', courseController.getCourses)
-
+router.get('/courses/:id', courseController.getCourse)
+router.get('/courses', courseController.getCourses)
 
 // users
 router.post('/login', passport.authenticate('local', { session: false }), userController.login)
