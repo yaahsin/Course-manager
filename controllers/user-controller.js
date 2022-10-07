@@ -1,12 +1,13 @@
 const jwt = require('jsonwebtoken')
 const sequelize = require('sequelize') // 可以寫原生語法
 const bcrypt = require('bcryptjs')
-const { user } = require('../models')
+const { user, role, user_role } = require('../models')
+const id = require('faker/lib/locales/id_ID')
 
 
 const userController = {
   signUp: (req, res) => {
-    const { username, email, password, checkPassword } = req.body
+    const { username, email, password, checkPassword, identity } = req.body
 
     // check if info valid
     if (!validateEmail(email)) {
@@ -34,24 +35,45 @@ const userController = {
         message: 'check password again'
       })
     }
+
+    if(identity !== 'teacher') {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'identity invalid'
+      })
+    }
+
     return Promise.all([
-      user.findOne({ where: { email }, raw: true })
+      user.findOne({ where: { email }, raw: true }), role.findOne({ where: { name: identity }, raw: true })
     ])
-      .then(([findEmail]) => {
+      .then(([findEmail, role]) => {
         if (findEmail) {
           return res.status(400).json({
             status: 'failed',
             message: 'email already registered'
           })
         }
+        if (!role) {
+          return res.status(400).json({
+            status: 'failed',
+            message: 'identity invalid'
+          })
+        }
         bcrypt.hash(req.body.password, 10)
-          .then(hash => user.create({
-            username: req.body.username,
-            email: req.body.email,
-            password: hash,
-            createdAt: Date.now(),
-            updatedAt: Date.now(),
-          }))
+          .then(hash =>
+              user.create({
+              username: req.body.username,
+              email: req.body.email,
+              password: hash,
+              createdAt: Date.now(),
+              updatedAt: Date.now(),
+            })
+          )
+          .then (user =>
+            user_role.create({
+              userId: user.toJSON().id,
+              roleId: role.id
+            }))
         return res.status(200).json({
           status: 'success',
           message: 'Sign up success.'
