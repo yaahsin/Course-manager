@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken')
 const sequelize = require('sequelize') // 可以寫原生語法
-const { course } = require('../models')
+const { course, role, user_role } = require('../models')
 
 
 const userController = {
@@ -25,30 +25,32 @@ const userController = {
   },
   NewCourse: async (req, res) => {
     const { name, time, description } = req.body
-    const userId = req.user.id
-    // const identity = await sequelize.query(`SELECT name FROM roles WHERE id = (SELECT role_id FROM user_roles WHERE user_id = ${userId})`)
+    const id = req.user.id
 
-    // if (identity !== "老師" ) {
-    //   res.status(404).json({
-    //     status: 'error',
-    //     message: "Only teacher can open course"
-    //   })
-    // }
+    const roleId = await user_role.findOne({ where: { userId: id }, raw: true })
 
-    if (!course) {
-      res.status(404).json({
+    const identity = await role.findOne({ where: { id: roleId.role_id }, raw: true })
+
+    if (identity.name !== "teacher") {
+      return res.status(403).json({
         status: 'error',
-        message: "Course not exists"
+        message: "Only teacher can open course"
       })
     }
 
-    await course.create({
+    const newCourse = await course.create({
       name,
       time,
       description,
-      userId: userId
+      userId: id
     })
-    return res.status(200).json({ status: 'success', message: 'New course added' })
+
+    return res.status(200).json(
+      {
+        status: 'success',
+        message: 'New course added',
+        newCourse
+      })
 
   }
 }
