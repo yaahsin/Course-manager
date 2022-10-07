@@ -22,6 +22,34 @@ const userController = {
       status: 'success',
       TheCourse
     })
+  },
+  NewCourse: async (req, res) => {
+    const { name, time, description } = req.body
+    const userId = req.user.id
+    // const identity = await sequelize.query(`SELECT name FROM roles WHERE id = (SELECT role_id FROM user_roles WHERE user_id = ${userId})`)
+
+    // if (identity !== "老師" ) {
+    //   res.status(404).json({
+    //     status: 'error',
+    //     message: "Only teacher can open course"
+    //   })
+    // }
+
+    if (!course) {
+      res.status(404).json({
+        status: 'error',
+        message: "Course not exists"
+      })
+    }
+
+    await course.create({
+      name,
+      time,
+      description,
+      userId: userId
+    })
+    return res.status(200).json({ status: 'success', message: 'New course added' })
+
   }
 }
 module.exports = userController
