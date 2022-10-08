@@ -52,6 +52,45 @@ const userController = {
         newCourse
       })
 
+  },
+  editCourse: async (req, res) => {
+    const { name, description } = req.body
+    const id = req.user.id
+    const courseId = req.params.id
+
+    // Check if user is teacher
+    const roleId = await user_role.findOne({ where: { userId: id }, raw: true })
+    const identity = await role.findOne({ where: { id: roleId.role_id }, raw: true })
+    if (identity.name !== "teacher") {
+      return res.status(403).json({
+        status: 'error',
+        message: "Only teacher can edit course"
+      })
+    }
+
+    if (!name.trim() || !description.trim()) {
+      return res.status(406).json({
+        status: 'error',
+        message: "All fields required"
+      })
+    }
+
+    const Course = await course.findOne({ where: { id: courseId, userId: id }, raw: true })
+    if (!Course) {
+      return res.status(404).json(
+        {
+          status: 'error',
+          message: 'Course not found',
+        })
+    }
+
+    await course.update({ name: name, description }, { where: { id: courseId, userId: id }, raw: true })
+    return res.status(200).json(
+      {
+        status: 'success',
+        message: 'Course edited',
+        Course
+      })
   }
 }
 module.exports = userController
