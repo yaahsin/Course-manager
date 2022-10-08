@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken')
 const sequelize = require('sequelize') // 可以寫原生語法
-const { course, role, user_role } = require('../models')
+const { course, role, user_role, enrollment } = require('../models')
 
 
 const userController = {
@@ -32,7 +32,7 @@ const userController = {
     const identity = await role.findOne({ where: { id: roleId.role_id }, raw: true })
 
     if (identity.name !== "teacher") {
-      return res.status(403).json({
+      return res.status(401).json({
         status: 'error',
         message: "Only teacher can open course"
       })
@@ -96,12 +96,22 @@ const userController = {
     const id = req.user.id
     const courseId = req.params.id
 
-    const Course = await course.findOne({ where: { id: courseId, userId: id }})
+    const Course = await course.findOne({ where: { id: courseId, userId: id } })
     if (!Course) {
       return res.status(404).json(
         {
           status: 'error',
           message: 'Course not found',
+        })
+    }
+
+    const Enrollment = await enrollment.findOne({ where: { id: courseId } })
+
+    if (!Enrollment) {
+      return res.status(403).json(
+        {
+          status: 'error',
+          message: 'Course cannot delete now, student enrolled already'
         })
     }
 
