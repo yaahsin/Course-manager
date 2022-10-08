@@ -91,6 +91,28 @@ const userController = {
         message: 'Course edited',
         Course
       })
+  },
+  deleteCourse: async (req, res) => {
+    const id = req.user.id
+    const courseId = req.params.id
+
+    const Course = await course.findOne({ where: { id: courseId, userId: id }})
+    if (!Course) {
+      return res.status(404).json(
+        {
+          status: 'error',
+          message: 'Course not found',
+        })
+    }
+
+    await Course.destroy()
+
+    return res.status(200).json(
+      {
+        status: 'success',
+        message: 'Course deleted',
+        Course
+      })
   }
 }
 module.exports = userController
