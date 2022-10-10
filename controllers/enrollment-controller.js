@@ -18,6 +18,15 @@ const enrollmentController = {
       })
     }
 
+    const Course = await enrollment.findOne({ where: { id: courseId, userId: id }, raw: true })
+    if (Course) {
+      return res.status(403).json(
+        {
+          status: 'error',
+          message: 'Course enrolled already',
+        })
+    }
+
     const newCourse = await enrollment.create({
       courseId,
       userId: id
