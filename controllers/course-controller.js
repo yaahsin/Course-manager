@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken')
 const sequelize = require('sequelize') // 可以寫原生語法
-const { course, role, user_role, enrollment } = require('../models')
+const { course, role, user_role, enrollment, time } = require('../models')
 
 
 const userController = {
@@ -24,15 +24,33 @@ const userController = {
     })
   },
   NewCourse: async (req, res) => {
-    const { name, time, description } = req.body
+    const { name, week, timing, description } = req.body
     const id = req.user.id
 
-    const roleId = await user_role.findOne({ where: { userId: id }, raw: true })
+    const validWeek = ['MON', 'THU', 'WED', 'THUR', 'FRI']
+    const validTime = ['AM', 'PM']
 
+    if (!validWeek.includes(week) || !validTime.includes(timing)) {
+      return res.status(403).json({
+        status: 'error',
+        message: "please enter valid format: week(MON, THU, WED, THUR, FRI); timing(AM, PM)"
+      })
+    }
+
+    const timeId = await time.findOne({ attributes: ['id'], where: { week, time: timing }, raw: true })
+
+    if (!timeId) {
+      return res.status(404).json({
+        status: 'error',
+        message: "time not found"
+      })
+    }
+
+    const roleId = await user_role.findOne({ where: { userId: id }, raw: true })
     const identity = await role.findOne({ where: { id: roleId.role_id }, raw: true })
 
     if (identity.name !== "teacher") {
-      return res.status(401).json({
+      return res.status(403).json({
         status: 'error',
         message: "Only teacher can open course"
       })
@@ -40,7 +58,7 @@ const userController = {
 
     const newCourse = await course.create({
       name,
-      time,
+      time: timeId.id,
       description,
       userId: id
     })

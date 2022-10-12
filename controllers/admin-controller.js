@@ -1,5 +1,5 @@
 const { user, course, role, user_role, enrollment } = require('../models')
-const { Op } = require("sequelize")
+const { Op } = require("sequelize") // operator
 
 // create, edit, viewAll, view, delete
 const adminController = {
