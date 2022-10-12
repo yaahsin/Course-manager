@@ -21,6 +21,7 @@ router.delete('/enrollments/courses/:id', authenticated, enrollmentController.de
 router.get('/enrollments', authenticated, enrollmentController.getEnrollments)
 
 // courses
+router.get('/courses/open', authenticated, courseController.openCourses)
 router.get('/courses/:id', authenticated, courseController.getCourse)
 router.put('/courses/:id', authenticated, courseController.editCourse)
 router.delete('/courses/:id', authenticated, courseController.deleteCourse)

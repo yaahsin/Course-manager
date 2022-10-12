@@ -150,6 +150,24 @@ const userController = {
         message: 'Course deleted',
         Course
       })
+  },
+  openCourses: async (req, res) => {
+    const teacherId = req.user.id
+
+    const openCourse = await course.findAll({ where: { userId: teacherId }, raw: true })
+
+    if (!openCourse) {
+      return res.status(404).json({
+        status: "failed",
+        message: "User didn't open any course yet"
+      })
+    }
+
+    return res.status(200).json({
+      status: "success",
+      openCourse
+    })
+
   }
 }
 module.exports = userController
