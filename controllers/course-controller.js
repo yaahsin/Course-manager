@@ -56,6 +56,15 @@ const userController = {
       })
     }
 
+    const existedCourse = await course.findOne({ where: { userId: id, time: timeId.id } })
+
+    if (existedCourse) {
+      return res.status(403).json({
+        status: "error",
+        message: "One cannot have courses at the same time!"
+      })
+    }
+
     const newCourse = await course.create({
       name,
       time: timeId.id,

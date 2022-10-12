@@ -12,9 +12,13 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING
       },
-      time: {
+      time_id: {
         allowNull: false,
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'times',
+          key: 'id'
+        },
       },
       description: {
         allowNull: false,

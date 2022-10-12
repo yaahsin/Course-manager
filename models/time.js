@@ -5,7 +5,7 @@ module.exports = (sequelize, DataTypes) => {
     time: DataTypes.STRING
   }, { underscored: true });
   time.associate = function (models) {
-    // associations can be defined here
+    time.hasMany(models.course)
   };
   return time;
 };
