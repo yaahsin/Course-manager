@@ -1,4 +1,3 @@
-const db = require('../models')
 const { course, role, user_role, enrollment } = require('../models')
 
 // create, edit, viewAll, view, delete

@@ -10,10 +10,6 @@ const { authenticated } = require('../middleware/auth')
 
 router.use('/admin', admin)
 
-router.get('/', (req, res) => {
-  res.render('index')
-})
-
 // enrollment
 router.put('/enrollments/courses/:id', authenticated, enrollmentController.editScores)
 router.post('/enrollments/courses/:id', authenticated, enrollmentController.NewCourse)

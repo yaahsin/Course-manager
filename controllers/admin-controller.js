@@ -1,4 +1,4 @@
-const { user, course, role, user_role, enrollment } = require('../models')
+const { user, course, role, user_role, time } = require('../models')
 const { Op } = require("sequelize") // operator
 
 // create, edit, viewAll, view, delete
@@ -47,6 +47,25 @@ const adminController = {
     return res.status(200).json({
       status: 'success',
       students
+    })
+  },
+  getCourses: async (req, res) => {
+    try {
+      const courses = await course.findAll({ raw: true })
+      return res.status(200).json({
+        status: 'success',
+        courses
+      })
+    } catch (err) {
+      next(err)
+    }
+  },
+  getCourse: async (req, res) => {
+    const selected = await req.params.id
+    const TheCourse = await course.findByPk(selected)
+    return res.status(200).json({
+      status: 'success',
+      TheCourse
     })
   }
 }
