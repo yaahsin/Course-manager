@@ -91,6 +91,40 @@ const enrollmentController = {
         message: 'Course deleted',
         Course
       })
+  },
+  editScores: async (req, res) => {
+    const { scores, studentId } = req.body
+    const teacherId = req.user.id
+    const courseId = req.params.id
+
+    const ownCourse = await course.findOne({ where: { id: courseId, userId: teacherId } })
+
+    if (!ownCourse) {
+      return res.status(404).json({
+        status: "error",
+        message: "Course not found"
+      })
+    }
+
+    const enrolledCourse = await enrollment.findOne({ where: { courseId, userId: studentId }, raw: true })
+
+    if (!enrolledCourse) {
+      return res.status(404).json({
+        status: "error",
+        message: "Student enrollment not found"
+      })
+    }
+
+    await enrollment.update(
+      { scores },
+      { where: { courseId, userId: studentId } }
+    )
+
+    return res.status(200).json({
+      status: "success",
+      message: "Student scores updated"
+    })
+
   }
 }
 module.exports = enrollmentController

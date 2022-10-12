@@ -15,9 +15,10 @@ router.get('/', (req, res) => {
 })
 
 // enrollment
+router.put('/enrollments/courses/:id', authenticated, enrollmentController.editScores)
+router.post('/enrollments/courses/:id', authenticated, enrollmentController.NewCourse)
+router.delete('/enrollments/courses/:id', authenticated, enrollmentController.deleteCourse)
 router.get('/enrollments', authenticated, enrollmentController.getEnrollments)
-router.post('/enrollment/courses/:id', authenticated, enrollmentController.NewCourse)
-router.delete('/enrollment/courses/:id', authenticated, enrollmentController.deleteCourse)
 
 // courses
 router.get('/courses/:id', authenticated, courseController.getCourse)
