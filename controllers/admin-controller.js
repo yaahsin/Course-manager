@@ -223,6 +223,30 @@ const adminController = {
       status: "success",
       enrolledCourses
     })
+  },
+  editScores: async (req, res) => {
+    const { scores, studentId } = req.body
+    const courseId = req.params.id
+
+    const enrolledCourse = await enrollment.findOne({ where: { courseId, userId: studentId }, raw: true })
+
+    if (!enrolledCourse) {
+      return res.status(404).json({
+        status: "error",
+        message: "Student enrollment not found"
+      })
+    }
+
+    await enrollment.update(
+      { scores },
+      { where: { courseId, userId: studentId } }
+    )
+
+    return res.status(200).json({
+      status: "success",
+      message: "Student scores updated"
+    })
+
   }
 }
 module.exports = adminController
