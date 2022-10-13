@@ -1,5 +1,3 @@
-const jwt = require('jsonwebtoken')
-const sequelize = require('sequelize') // 可以寫原生語法
 const { course, role, user_role, enrollment, time } = require('../models')
 
 
@@ -67,7 +65,7 @@ const userController = {
 
     const newCourse = await course.create({
       name,
-      time: timeId.id,
+      timeId: timeId.id,
       description,
       userId: id
     })
@@ -111,7 +109,7 @@ const userController = {
         })
     }
 
-    await course.update({ name: name, description }, { where: { id: courseId, userId: id }, raw: true })
+    await course.update({ name, description }, { where: { id: courseId, userId: id }, raw: true })
     return res.status(200).json(
       {
         status: 'success',
