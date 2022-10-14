@@ -7,6 +7,7 @@ const userController = require('../controllers/user-controller')
 const courseController = require('../controllers/course-controller')
 const enrollmentController = require('../controllers/enrollment-controller')
 const { authenticated } = require('../middleware/auth')
+const { errorHandler } = require('../middleware/error-handler')
 
 router.use('/admin', admin)
 
@@ -30,6 +31,6 @@ router.post('/user', authenticated, userController.editUser)
 router.post('/login', passport.authenticate('local', { session: false }), userController.login)
 router.post('/signup', userController.signUp)
 
-// router.use('/', (req, res) => res.redirect('/index'))
+router.use('/', errorHandler)
 
 module.exports = router
