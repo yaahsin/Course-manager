@@ -1,5 +1,6 @@
 const { user, course, role, user_role, time, enrollment } = require('../models')
 const { Op } = require("sequelize") // operator
+const bcrypt = require('bcryptjs')
 
 // create, edit, viewAll, view, delete
 const adminController = {
@@ -47,6 +48,24 @@ const adminController = {
     return res.status(200).json({
       status: 'success',
       students
+    })
+  },
+  getUser: async (req, res) => {
+    const userId = req.params.id
+
+    const User = await user.findOne({ attributes: { exclude: ['password'] }, where: { id: userId } })
+
+    if (!User) {
+      return res.status(404).json({
+        status: "error",
+        message: "user not found"
+      })
+    }
+
+    return res.status(404).json({
+      status: "error",
+      message: "User found",
+      User
     })
   },
   getCourses: async (req, res) => {

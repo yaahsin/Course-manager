@@ -1,8 +1,7 @@
 const jwt = require('jsonwebtoken')
-const sequelize = require('sequelize') // 可以寫原生語法
+const { Op } = require("sequelize") // 可以寫原生語法
 const bcrypt = require('bcryptjs')
 const { user, role, user_role } = require('../models')
-const id = require('faker/lib/locales/id_ID')
 
 
 const userController = {
@@ -36,7 +35,7 @@ const userController = {
       })
     }
 
-    if(identity !== 'teacher') {
+    if (identity !== 'teacher') {
       return res.status(400).json({
         status: 'failed',
         message: 'identity invalid'
@@ -61,7 +60,7 @@ const userController = {
         }
         bcrypt.hash(req.body.password, 10)
           .then(hash =>
-              user.create({
+            user.create({
               username: req.body.username,
               email: req.body.email,
               password: hash,
@@ -69,7 +68,7 @@ const userController = {
               updatedAt: Date.now(),
             })
           )
-          .then (user =>
+          .then(user =>
             user_role.create({
               userId: user.toJSON().id,
               roleId: role.id
@@ -102,6 +101,30 @@ const userController = {
     } catch (err) {
       next(err)
     }
+  },
+  getUser: async (req, res) => {
+    const userId = req.user.id
+
+    const User = await user.findOne({
+      attributes: { exclude: ['password'] }, where: { id: userId }, where: {
+        id: {
+          [Op.not]: 1
+        }
+      }
+    })
+
+    if (!User) {
+      return res.status(404).json({
+        status: "error",
+        message: "user not found"
+      })
+    }
+
+    return res.status(404).json({
+      status: "error",
+      message: "User found",
+      User
+    })
   }
 }
 module.exports = userController

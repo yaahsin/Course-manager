@@ -13,6 +13,7 @@ router.delete('/courses/:id', authenticated, adminController.deleteCourse)
 
 router.get('/teachers', adminController.getTeachers)
 router.get('/students', adminController.getStudents)
+router.get('/users/:id', adminController.getUser)
 
 router.get('/courses', adminController.getCourses)
 router.post('/courses', authenticated, adminController.NewCourse)

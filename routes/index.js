@@ -25,6 +25,7 @@ router.get('/courses', authenticated, courseController.getCourses)
 router.post('/courses', authenticated, courseController.NewCourse)
 
 // users
+router.get('/user', authenticated, userController.getUser)
 router.post('/login', passport.authenticate('local', { session: false }), userController.login)
 router.post('/signup', userController.signUp)
 
