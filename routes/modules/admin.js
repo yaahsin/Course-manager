@@ -11,14 +11,13 @@ router.get('/courses/:id', adminController.getCourse)
 router.put('/courses/:id', authenticated, adminController.editCourse)
 router.delete('/courses/:id', authenticated, adminController.deleteCourse)
 
-router.get('/teachers', adminController.getTeachers)
-router.get('/students', adminController.getStudents)
-router.get('/users/:id', adminController.getUser)
+router.get('/teachers', authenticated, adminController.getTeachers)
+router.get('/students', authenticated, adminController.getStudents)
+router.get('/users/:id', authenticated, adminController.getUser)
+router.post('/user', authenticated, adminController.editUser)
 
 router.get('/courses', adminController.getCourses)
 router.post('/courses', authenticated, adminController.NewCourse)
-
-
 
 
 router.use('/', (req, res) => res.redirect('/'))
