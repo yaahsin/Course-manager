@@ -5,7 +5,7 @@ const { user, role, user_role } = require('../models')
 
 
 const userController = {
-  signUp: (req, res) => {
+  signUp: (req, res, next) => {
     try {
       const { username, email, password, checkPassword, identity } = req.body
 
@@ -106,7 +106,7 @@ const userController = {
       next(err)
     }
   },
-  getUser: async (req, res) => {
+  getUser: async (req, res, next) => {
     try {
       const userId = req.user.id
 
@@ -134,7 +134,7 @@ const userController = {
       next(err)
     }
   },
-  editUser: async (req, res) => {
+  editUser: async (req, res, next) => {
     try {
       const { username, email, password } = req.body
       const userId = req.user.id

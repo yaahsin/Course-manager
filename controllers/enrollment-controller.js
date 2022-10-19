@@ -2,7 +2,7 @@ const { course, role, user_role, enrollment } = require('../models')
 
 // create, edit, viewAll, view, delete
 const enrollmentController = {
-  getEnrollments: async (req, res) => {
+  getEnrollments: async (req, res, next) => {
     try {
       const id = req.user.id
 
@@ -26,7 +26,7 @@ const enrollmentController = {
       next(err)
     }
   },
-  NewCourse: async (req, res) => {
+  NewCourse: async (req, res, next) => {
     try {
       const courseId = req.params.id
       const id = req.user.id
@@ -67,7 +67,7 @@ const enrollmentController = {
       next(err)
     }
   },
-  deleteCourse: async (req, res) => {
+  deleteCourse: async (req, res, next) => {
     try {
       const id = req.user.id
       const courseId = req.params.id
@@ -101,7 +101,7 @@ const enrollmentController = {
       next(err)
     }
   },
-  editScores: async (req, res) => {
+  editScores: async (req, res, next) => {
     try {
       const { scores, studentId } = req.body
       const teacherId = req.user.id

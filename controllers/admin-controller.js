@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs')
 
 // create, edit, viewAll, view, delete
 const adminController = {
-  getTeachers: async (req, res) => {
+  getTeachers: async (req, res, next) => {
     try {
       // 自組sub queries: role_id > user_id > find users detail
       const roleId = await role.findAll({ attributes: ['id'], where: { name: "teacher" }, raw: true })
@@ -32,7 +32,7 @@ const adminController = {
       next(err)
     }
   },
-  getStudents: async (req, res) => {
+  getStudents: async (req, res, next) => {
     try {
       const roleId = await role.findAll({ attributes: ['id'], where: { name: "student" }, raw: true })
       const userId = await user_role.findAll({ attributes: [['user_id', 'id']], where: { roleId: roleId[0].id }, raw: true })
@@ -58,7 +58,7 @@ const adminController = {
       next(err)
     }
   },
-  getUser: async (req, res) => {
+  getUser: async (req, res, next) => {
     try {
       const userId = req.params.id
 
@@ -80,7 +80,7 @@ const adminController = {
       next(err)
     }
   },
-  editUser: async (req, res) => {
+  editUser: async (req, res, next) => {
     try {
       const { userId, username, email, password } = req.body
       const adminId = req.user.id
@@ -143,7 +143,7 @@ const adminController = {
       next(err)
     }
   },
-  getCourses: async (req, res) => {
+  getCourses: async (req, res, next) => {
     try {
       const courses = await course.findAll({ raw: true })
       return res.status(200).json({
@@ -154,7 +154,7 @@ const adminController = {
       next(err)
     }
   },
-  getCourse: async (req, res) => {
+  getCourse: async (req, res, next) => {
     try {
       const selected = await req.params.id
       const TheCourse = await course.findByPk(selected)
@@ -166,7 +166,7 @@ const adminController = {
       next(err)
     }
   },
-  NewCourse: async (req, res) => {
+  NewCourse: async (req, res, next) => {
     try {
       const { teacherId, name, week, timing, description } = req.body
       const userId = req.user.id
@@ -226,7 +226,7 @@ const adminController = {
       next(err)
     }
   },
-  editCourse: async (req, res) => {
+  editCourse: async (req, res, next) => {
     try {
       const { name, description } = req.body
       const userId = req.user.id
@@ -268,7 +268,7 @@ const adminController = {
         })
     } catch (err) { next(err) }
   },
-  deleteCourse: async (req, res) => {
+  deleteCourse: async (req, res, next) => {
     try {
       const courseId = req.params.id
 
@@ -297,7 +297,7 @@ const adminController = {
       next(err)
     }
   },
-  openCourses: async (req, res) => {
+  openCourses: async (req, res, next) => {
     try {
       const { userId } = req.body
 
@@ -318,7 +318,7 @@ const adminController = {
       next(err)
     }
   },
-  enrolledCourses: async (req, res) => {
+  enrolledCourses: async (req, res, next) => {
     try {
       const { userId } = req.body
 
@@ -339,7 +339,7 @@ const adminController = {
       next(err)
     }
   },
-  editScores: async (req, res) => {
+  editScores: async (req, res, next) => {
     try {
       const { scores, studentId } = req.body
       const courseId = req.params.id

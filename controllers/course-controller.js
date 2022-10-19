@@ -2,7 +2,7 @@ const { course, role, user_role, enrollment, time } = require('../models')
 
 
 const userController = {
-  getCourses: async (req, res) => {
+  getCourses: async (req, res, next) => {
     try {
       const courses = await course.findAll({ raw: true })
       return res.status(200).json({
@@ -13,7 +13,7 @@ const userController = {
       next(err)
     }
   },
-  getCourse: async (req, res) => {
+  getCourse: async (req, res, next) => {
     try {
       const selected = await req.params.id
       const TheCourse = await course.findByPk(selected)
@@ -25,7 +25,7 @@ const userController = {
       next(err)
     }
   },
-  NewCourse: async (req, res) => {
+  NewCourse: async (req, res, next) => {
     try {
       const { name, week, timing, description } = req.body
       const id = req.user.id
@@ -85,7 +85,7 @@ const userController = {
       next(err)
     }
   },
-  editCourse: async (req, res) => {
+  editCourse: async (req, res, next) => {
     try {
       const { name, description } = req.body
       const id = req.user.id
@@ -129,7 +129,7 @@ const userController = {
     }
 
   },
-  deleteCourse: async (req, res) => {
+  deleteCourse: async (req, res, next) => {
     try {
       const id = req.user.id
       const courseId = req.params.id
@@ -166,7 +166,7 @@ const userController = {
     }
 
   },
-  openCourses: async (req, res) => {
+  openCourses: async (req, res, next) => {
     try {
       const teacherId = req.user.id
 
@@ -187,10 +187,10 @@ const userController = {
       next(err)
     }
   },
-  enrolledCourses: async (req, res) => {
+  enrolledCourses: async (req, res, next) => {
     try {
       const { courseId } = req.params
-      const enrolledCourses = await course.findAll({ attributes: [['user_id', 'student_id'], 'scores', 'created_at', 'updated_at'], where: { courseId } })
+      const enrolledCourses = await enrollment.findAll({ attributes: [['user_id', 'student_id'], 'scores', 'created_at', 'updated_at'], where: { courseId } })
 
       if (!enrolledCourses) {
         return res.status(404), json({
