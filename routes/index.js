@@ -32,6 +32,8 @@ router.put('/users/:id', authenticated, userController.editUser)
 router.post('/login', passport.authenticate('local', { session: false }), userController.login)
 router.post('/signup', userController.signUp)
 
+router.get('/index',courseController.getIndex )
+
 router.use('/', errorHandler)
 
 module.exports = router

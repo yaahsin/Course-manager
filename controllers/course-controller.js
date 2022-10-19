@@ -2,6 +2,21 @@ const { course, role, user_role, enrollment, time, user } = require('../models')
 
 
 const userController = {
+  getIndex: async (req, res, next) => {
+    try {
+      const courseAmounts = await course.count()
+      const userAmounts = await user.count() - 1
+
+      return res.status(200).json({
+        status: 'success',
+        courseAmounts,
+        userAmounts
+      })
+
+    } catch (err) {
+      next(err)
+    }
+  },
   getCourses: async (req, res, next) => {
     try {
       const courses = await course.findAll({ raw: true })

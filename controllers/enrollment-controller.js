@@ -72,8 +72,7 @@ const enrollmentController = {
 
       const newCourse = await enrollment.create({
         courseId,
-        userId: id,
-        scores: 0
+        userId: id
       })
 
       return res.status(200).json(
