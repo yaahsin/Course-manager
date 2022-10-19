@@ -19,7 +19,9 @@ const userController = {
   },
   getCourses: async (req, res, next) => {
     try {
-      const courses = await course.findAll({ raw: true })
+      const courses = await course.findAll({
+        raw: true, include: { model: user, attributes: [['username', 'teacher']] },
+      })
       return res.status(200).json({
         status: 'success',
         courses
