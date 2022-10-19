@@ -147,14 +147,14 @@ const userController = {
         })
       }
 
-      if (!username || !email || !password) {
+      if (!username.trim() || !email.trim() || !password.trim()) {
         return res.status(403).json({
           status: "error",
           message: "All fields are required"
         })
       }
 
-      if (!validateEmail(email)) {
+      if (!validateEmail(email.trim())) {
         return res.status(400).json({
           status: 'failed',
           message: 'email not valid'
@@ -166,7 +166,7 @@ const userController = {
         return re.test(email)
       }
 
-      const checkEmail = await user.findOne({ where: { email } })
+      const checkEmail = await user.findOne({ where: { email: email.trim() } })
 
       if (checkEmail) {
         return res.status(403).json({
@@ -175,9 +175,9 @@ const userController = {
         })
       }
 
-      const hash = await bcrypt.hash(password, 10)
+      const hash = await bcrypt.hash(password.trim(), 10)
 
-      await User.update({ username, password: hash, email })
+      await User.update({ username: username.trim(), password: hash, email: email.trim() })
 
       return res.status(200).json({
         status: "success",

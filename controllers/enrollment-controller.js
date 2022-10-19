@@ -72,7 +72,8 @@ const enrollmentController = {
 
       const newCourse = await enrollment.create({
         courseId,
-        userId: id
+        userId: id,
+        newCourse
       })
 
       return res.status(200).json(
@@ -140,6 +141,14 @@ const enrollmentController = {
         return res.status(404).json({
           status: "error",
           message: "Student enrollment not found"
+        })
+      }
+
+      if (scores < 0 || scores > 100 || isNaN(scores)) {
+        return res.status(403).json({
+          status: 'error',
+          message: 'invalid scores, range: 1-100',
+          inputScores: scores
         })
       }
 

@@ -168,8 +168,29 @@ const adminController = {
   },
   NewCourse: async (req, res, next) => {
     try {
-      const { teacherId, name, week, timing, description } = req.body
+      let { teacherId, name, week, timing, description } = req.body
       const userId = req.user.id
+
+      teacherId = teacherId.trim()
+      name = name.trim()
+      week = week.trim()
+      timing = timing.trim()
+      description = description.trim()
+
+      // todo: 整合錯誤訊息再回傳
+      if (!teacherId || !name || !week || !timing || !description) {
+        return res.status(403).json({
+          status: 'error',
+          message: 'All field are required'
+        })
+      }
+
+      if (description.length > 200) {
+        return res.status(403).json({
+          status: 'error',
+          message: 'invalid length, should < 200 '
+        })
+      }
 
       const validWeek = ['MON', 'THU', 'WED', 'THUR', 'FRI']
       const validTime = ['AM', 'PM']
@@ -350,6 +371,14 @@ const adminController = {
         return res.status(404).json({
           status: "error",
           message: "Student enrollment not found"
+        })
+      }
+
+      if (scores < 0 || scores > 100 || isNaN(scores)) {
+        return res.status(403).json({
+          status: 'error',
+          message: 'invalid scores, range: 1-100',
+          inputScores: scores
         })
       }
 

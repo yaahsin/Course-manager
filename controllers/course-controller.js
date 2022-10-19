@@ -47,6 +47,20 @@ const userController = {
       const { name, week, timing, description } = req.body
       const id = req.user.id
 
+      if (!name || !week || !timing || !description) {
+        return res.status(403).json({
+          status: 'error',
+          message: 'All field are required'
+        })
+      }
+
+      if(description.length > 200) {
+        return res.status(403).json({
+          status: 'error',
+          message: 'invalid length, should < 200 '
+        })
+      }
+
       const validWeek = ['MON', 'THU', 'WED', 'THUR', 'FRI']
       const validTime = ['AM', 'PM']
 
