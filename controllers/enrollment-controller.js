@@ -1,4 +1,5 @@
 const { course, role, user_role, enrollment } = require('../models')
+const { Op } = require("sequelize")
 
 // create, edit, viewAll, view, delete
 const enrollmentController = {
@@ -52,16 +53,34 @@ const enrollmentController = {
           })
       }
 
+      const timeId = await course.findOne({ attributes: ['time_id'], where: { id: courseId }, raw: true })
+      const existedCourse = await enrollment.findAll({ attributes: [['course_id', 'id']], where: { userId: id }, raw: true })
+      const sameTimeCourses = await course.findAll({attributes: ['id'],
+        where: {
+          [Op.or]: existedCourse,
+          timeId: timeId.time_id
+        }, raw: true
+      })
+
+
+      if (sameTimeCourses.length > 0) {
+        return res.status(403).json({
+          status: "error",
+          message: "One cannot have courses at the same time!"
+        })
+      }
+
       const newCourse = await enrollment.create({
         courseId,
-        userId: id
+        userId: id,
+        scores: 0
       })
 
       return res.status(200).json(
         {
           status: 'success',
           message: 'New course added to student plan',
-          newCourse
+          // newCourse
         })
     } catch (err) {
       next(err)

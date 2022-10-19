@@ -9,7 +9,7 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       scores: {
-        allowNull: false,
+        allowNull: true,
         type: Sequelize.TINYINT
       },
       user_id: {
