@@ -15,10 +15,11 @@ router.use('/admin', admin)
 router.put('/enrollments/courses/:id', authenticated, enrollmentController.editScores)
 router.post('/enrollments/courses/:id', authenticated, enrollmentController.NewCourse)
 router.delete('/enrollments/courses/:id', authenticated, enrollmentController.deleteCourse)
-router.get('/enrollments', authenticated, enrollmentController.getEnrollments)
+router.get('/enrollments/users/:id', authenticated, enrollmentController.getEnrollments)
 
 // courses
-router.get('/courses/open', authenticated, courseController.openCourses)
+router.get('/users/:id/courses/openings', authenticated, courseController.openCourses)
+router.get('/users/:id/courses/:courseId/enrollments', authenticated, courseController.enrolledCourses)
 router.get('/courses/:id', authenticated, courseController.getCourse)
 router.put('/courses/:id', authenticated, courseController.editCourse)
 router.delete('/courses/:id', authenticated, courseController.deleteCourse)
@@ -26,8 +27,8 @@ router.get('/courses', authenticated, courseController.getCourses)
 router.post('/courses', authenticated, courseController.NewCourse)
 
 // users
-router.get('/user', authenticated, userController.getUser)
-router.post('/user', authenticated, userController.editUser)
+router.get('/users/:id', authenticated, userController.getUser)
+router.put('/users/:id', authenticated, userController.editUser)
 router.post('/login', passport.authenticate('local', { session: false }), userController.login)
 router.post('/signup', userController.signUp)
 

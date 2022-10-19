@@ -125,7 +125,7 @@ const userController = {
           Course
         })
     } catch (err) {
-      next{ err }
+      next(err)
     }
 
   },
@@ -182,6 +182,26 @@ const userController = {
       return res.status(200).json({
         status: "success",
         openCourse
+      })
+    } catch (err) {
+      next(err)
+    }
+  },
+  enrolledCourses: async (req, res) => {
+    try {
+      const { courseId } = req.params
+      const enrolledCourses = await course.findAll({ attributes: [['user_id', 'student_id'], 'scores', 'created_at', 'updated_at'], where: { courseId } })
+
+      if (!enrolledCourses) {
+        return res.status(404), json({
+          status: 'error',
+          message: 'course not yet enrolled'
+        })
+      }
+
+      return res.status(200).json({
+        status: 'success',
+        enrolledCourses
       })
     } catch (err) {
       next(err)
