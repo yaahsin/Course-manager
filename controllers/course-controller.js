@@ -1,4 +1,4 @@
-const { course, role, user_role, enrollment, time } = require('../models')
+const { course, role, user_role, enrollment, time, user } = require('../models')
 
 
 const userController = {
@@ -190,7 +190,7 @@ const userController = {
   enrolledCourses: async (req, res, next) => {
     try {
       const { courseId } = req.params
-      const enrolledCourses = await enrollment.findAll({ attributes: [['user_id', 'student_id'], 'scores', 'created_at', 'updated_at'], where: { courseId } })
+      const enrolledCourses = await enrollment.findAll({ attributes: [['user_id', 'student_id'], 'scores', 'created_at', 'updated_at'], where: { courseId }, include: { model: user, attributes: ['username', 'email'], required: false } })
 
       if (!enrolledCourses) {
         return res.status(404), json({
